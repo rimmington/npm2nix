@@ -323,7 +323,7 @@ do ->
                             @_havePackage name, spec, pkg, registry
                             finished() if hash? and rev?
                         finder = findit gitDir
-                        dotGitRegexp = /^\.git.*$/
+                        dotGitRegexp = /^\.git$/
                         deletesLeft = 1
                         deleteFinished = ->
                           deletesLeft -= 1
