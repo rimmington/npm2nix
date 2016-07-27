@@ -360,7 +360,7 @@ do ->
                           error "Error walking git tree to remove .git* files: #{err}"
                         finder.on 'end', deleteFinished
                         finder.once 'noMoreDeletes', ->
-                          nixHash = child_process.spawn "nix-hash", [ "--type", "sha256", gitDir ], stdio: [ 0, 'pipe', 2 ]
+                          nixHash = child_process.spawn "nix-hash", [ "--type", "sha256", "--base32", gitDir ], stdio: [ 0, 'pipe', 2 ]
                           nixHash.on 'error', (err) -> error "Error executing nix-hash: #{err}"
                           nixHash.stdout.setEncoding "utf8"
                           nixHash.on 'exit', (code, signal) ->
@@ -369,7 +369,7 @@ do ->
                             else unless code is 0
                               error "nix-hash exited with non-zero status code #{code}"
                           readHash = ->
-                            hash = nixHash.stdout.read 64
+                            hash = nixHash.stdout.read 52
                             if hash?
                               nixHash.stdout.removeListener 'readable', readHash
                               nixHash.stdout.removeListener 'end', earlyHashEnd
@@ -378,7 +378,7 @@ do ->
                           nixHash.stdout.on 'readable', readHash
                           readHash()
                           earlyHashEnd = ->
-                            error "nix-hash's stdout ended before 64 characters were read"
+                            error "nix-hash's stdout ended before 52 characters were read"
                           nixHash.stdout.on 'end', earlyHashEnd
 
 do ->
