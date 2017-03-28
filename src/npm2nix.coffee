@@ -30,7 +30,7 @@ parser.addArgument [ 'output' ],
   type: path.resolve
   metavar: 'OUTPUT'
 
-parser.addArgument [ '--overwrite' ],
+parser.addArgument [ '--nooverwrite' ],
   help: 'Whether to overwrite the helper default.nix expression (when generating for a package.json)',
   action: 'storeTrue',
 
@@ -229,7 +229,7 @@ npmconf.load (err, conf) ->
         }
         """ or """;
         }
-        """), flag: "w#{if args.overwrite then '' else 'x'}", (err) ->
+        """), flag: "w#{if args.nooverwrite then 'x' else ''}", (err) ->
           if err? and err.code isnt 'EEXIST'
             console.error "Error writing helper default.nix: #{err}"
     else
